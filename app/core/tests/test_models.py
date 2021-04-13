@@ -8,7 +8,9 @@ class ModelTests(TestCase):
         """Test creating a new user with email successfully"""
         email = 'test@wherever.com'
         password = 'testPass123'
-        user = get_user_model().objects.create_user(email=email, password=password)
+        user = get_user_model().objects.create_user(
+            email=email,
+            password=password)
 
         self.assertEqual(user.email, email)
         self.assertTrue(user.check_password(password))
@@ -24,3 +26,13 @@ class ModelTests(TestCase):
         """test that the user with no email raises an error"""
         with self.assertRaises(ValueError):
             get_user_model().objects.create_user(None, password=None)
+
+    def test_create_new_superuser(self):
+        """creating a new super user"""
+
+        user = get_user_model().objects.create_superuser(
+            'test@test.com',
+            'test123')
+        self.assertTrue(user.is_superuser)
+        # is_superuser is included as part of the permissionsMixin
+        self.assertTrue(user.is_staff)
